@@ -7,19 +7,88 @@ output:
 
 
 ## Loading and preprocessing the data
+First, we need to load this personal movement data. Here's how to do it.
 
+```{r read, cache=TRUE}
+act <- read.csv("activity.csv")
+```
 
+Let's see how big this data is and what are the variables.
+```{r eda1, cache=TRUE}
+dim(act)
+head(act)
+tail(act)
+```
+As we can see, we have a compact dataset with only the number of steps per time interval as our measurement. The data was collected for 2 months (from 2012-10-01 until 2012-11-30).
 
+A further exploration shows that our date column is already a factor.
+```{r eda2, cache=TRUE}
+str(act)
+```
 ## What is mean total number of steps taken per day?
+To answer this question, I am going to use the rowsum function to produce a rough histogram of the total number of steps taken per day.
+```{r q1plot, cache=TRUE}
+hist(rowsum(act$steps,act$date,na.rm=TRUE),10,main="The total number of steps taken per day",xlab="The total number of steps",ylab="The number of days")
+```
 
-
+And here are the mean and median of the total number of steps taken per day.
+```{r q1, cache=TRUE}
+mean(rowsum(act$steps,act$date,na.rm=TRUE))
+median(rowsum(act$steps,act$date,na.rm=TRUE))
+```
 
 ## What is the average daily activity pattern?
+Now, let's explore the pattern of steps across time intervals.
+```{r q2plot, cache=TRUE}
+a <- rowsum(act$steps,as.factor(act$interval),na.rm=TRUE)/61
+plot(dimnames(a)[[1]],a,type="l",xlab="5-minute interval",ylab="the average number of steps taken for each interval",main="Time series plot showing the average daily activity pattern")
+```
 
-
+Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+```{r q2_1, cache=TRUE}
+m <- max(a)
+which(a==m)
+```
+Let's check if our answer is correct.
+```{r q2_2, cache=TRUE}
+a[104,]
+```
+So, it appears that record 104, which shows the interval 835, has the highest step activity during the day. The interval 835 translates to `r floor(835 / 60)` hours `r 835 %% 60` minutes.
 
 ## Imputing missing values
+We noticed from the beginning that our data contains some NA values. Let's pay attention to NAs now. How many records have NA values?
 
+```{r q3_1, cache=TRUE}
+sum(is.na(act$steps))
+```
 
+That's about `r mean(is.na(act$steps))*100` % of the whole dataset. Where does NA occurs?
 
+```{r q3_EDA, cache=TRUE}
+unique(act[is.na(act$steps),]$date)
+unique(act[is.na(act$steps),]$interval)
+```
+
+The results show that the data is only missing for 8 out of 61 days, leaving 53 days with complete data for all time intervals. The data is also possibly missing for any interval during the day (188 out of 188 intervals).
+
+Let's impute the missing values with mean for the intervals.
+
+```{r impute, cache=TRUE}
+act[is.na(act$steps),1] <- a[match(act[is.na(act$steps),3],rownames(a))]
+head(act)
+tail(act)
+sum(is.na(act$steps))
+```
+
+Now, let's take a look at the histogram and mean and median of the total number of steps each day and see if they differ from the first part of assignment.
+
+```{r q3plot, cache=TRUE}
+hist(rowsum(act$steps,act$date,na.rm=TRUE),10,main="The total number of steps taken per day",xlab="The total number of steps",ylab="The number of days")
+```
+
+And here are the mean and median of the total number of steps taken per day.
+```{r q3_2, cache=TRUE}
+mean(rowsum(act$steps,act$date,na.rm=TRUE))
+median(rowsum(act$steps,act$date,na.rm=TRUE))
+```
 ## Are there differences in activity patterns between weekdays and weekends?

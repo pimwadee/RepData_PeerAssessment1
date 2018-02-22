@@ -71,24 +71,40 @@ unique(act[is.na(act$steps),]$interval)
 
 The results show that the data is only missing for 8 out of 61 days, leaving 53 days with complete data for all time intervals. The data is also possibly missing for any interval during the day (188 out of 188 intervals).
 
-Let's impute the missing values with mean for the intervals.
+Let's impute the missing values with mean for the intervals. I will create another variable to contain this new dataset.
 
 ```{r impute, cache=TRUE}
-act[is.na(act$steps),1] <- a[match(act[is.na(act$steps),3],rownames(a))]
-head(act)
-tail(act)
-sum(is.na(act$steps))
+act_noNA <- act
+act_noNA[is.na(act_noNA$steps),1] <- a[match(act_noNA[is.na(act_noNA$steps),3],rownames(a))]
+head(act_noNA)
+tail(act_noNA)
+sum(is.na(act_noNA$steps))
 ```
 
 Now, let's take a look at the histogram and mean and median of the total number of steps each day and see if they differ from the first part of assignment.
 
 ```{r q3plot, cache=TRUE}
-hist(rowsum(act$steps,act$date,na.rm=TRUE),10,main="The total number of steps taken per day",xlab="The total number of steps",ylab="The number of days")
+hist(rowsum(act_noNA$steps,act_noNA$date,na.rm=TRUE),10,main="The total number of steps taken per day after imputation",xlab="The total number of steps",ylab="The number of days")
 ```
 
 And here are the mean and median of the total number of steps taken per day.
 ```{r q3_2, cache=TRUE}
-mean(rowsum(act$steps,act$date,na.rm=TRUE))
-median(rowsum(act$steps,act$date,na.rm=TRUE))
+mean(rowsum(act_noNA$steps,act_noNA$date,na.rm=TRUE))
+median(rowsum(act_noNA$steps,act_noNA$date,na.rm=TRUE))
 ```
 ## Are there differences in activity patterns between weekdays and weekends?
+First, I am adding a new variable called weekday to our data frame.
+
+```{r newv, cache=TRUE}
+act_noNA$date <- as.Date(act_noNA$date)
+weekend <- c("Saturday","Sunday")
+act_noNA$weekend <- factor((weekdays(act_noNA$date) %in% weekend),levels=c(TRUE,FALSE),labels=c("weekend","weekday"))
+```
+
+To further investigate this point, I am going to make a panel plot comparing the average number of steps taken, across weekdays and weekends.
+
+```{r q4plot, cache=TRUE}
+plotdata <- aggregate(steps~interval+weekend, data=act_noNA, mean)
+library(lattice)
+xyplot(steps~interval|factor(weekend), data=plotdata, type="l", xlab="Interval", ylab="Number of steps")
+```

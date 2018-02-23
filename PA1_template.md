@@ -72,7 +72,7 @@ To answer this question, I am going to use the rowsum function to produce a roug
 hist(rowsum(act$steps,act$date,na.rm=TRUE),10,main="The total number of steps taken per day",xlab="The total number of steps",ylab="The number of days")
 ```
 
-![](PA1_template_files/figure/q1plot-1.png)<!-- -->
+![](PA1_template_files/figure-html/q1plot-1.png)<!-- -->
 
 And here are the mean and median of the total number of steps taken per day.
 
@@ -100,7 +100,7 @@ a <- rowsum(act$steps,as.factor(act$interval),na.rm=TRUE)/61
 plot(dimnames(a)[[1]],a,type="l",xlab="5-minute interval",ylab="the average number of steps taken for each interval",main="Time series plot showing the average daily activity pattern")
 ```
 
-![](PA1_template_files/figure/q2plot-1.png)<!-- -->
+![](PA1_template_files/figure-html/q2plot-1.png)<!-- -->
 
 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -227,7 +227,7 @@ Now, let's take a look at the histogram and mean and median of the total number 
 hist(rowsum(act_noNA$steps,act_noNA$date,na.rm=TRUE),10,main="The total number of steps taken per day after imputation",xlab="The total number of steps",ylab="The number of days")
 ```
 
-![](PA1_template_files/figure/q3plot-1.png)<!-- -->
+![](PA1_template_files/figure-html/q3plot-1.png)<!-- -->
 
 And here are the mean and median of the total number of steps taken per day.
 
@@ -262,7 +262,14 @@ To further investigate this point, I am going to make a panel plot comparing the
 ```r
 plotdata <- aggregate(steps~interval+weekend, data=act_noNA, mean)
 library(lattice)
+```
+
+```
+## Warning: package 'lattice' was built under R version 3.1.3
+```
+
+```r
 xyplot(steps~interval|factor(weekend), data=plotdata, type="l", xlab="Interval", ylab="Number of steps")
 ```
 
-![](PA1_template_files/figure/q4plot-1.png)<!-- -->
+![](PA1_template_files/figure-html/q4plot-1.png)<!-- -->

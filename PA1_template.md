@@ -100,7 +100,7 @@ a <- rowsum(act$steps,as.factor(act$interval),na.rm=TRUE)/61
 plot(dimnames(a)[[1]],a,type="l",xlab="5-minute interval",ylab="the average number of steps taken for each interval",main="Time series plot showing the average daily activity pattern")
 ```
 
-![](PA1_template_files/figure-html/q2plot-1.png)<!-- -->
+![](PA1_template_files/figure/q2plot-1.png)<!-- -->
 
 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -227,7 +227,7 @@ Now, let's take a look at the histogram and mean and median of the total number 
 hist(rowsum(act_noNA$steps,act_noNA$date,na.rm=TRUE),10,main="The total number of steps taken per day after imputation",xlab="The total number of steps",ylab="The number of days")
 ```
 
-![](PA1_template_files/figure-html/q3plot-1.png)<!-- -->
+![](PA1_template_files/figure/q3plot-1.png)<!-- -->
 
 And here are the mean and median of the total number of steps taken per day.
 
@@ -265,4 +265,4 @@ library(lattice)
 xyplot(steps~interval|factor(weekend), data=plotdata, type="l", xlab="Interval", ylab="Number of steps")
 ```
 
-![](PA1_template_files/figure-html/q4plot-1.png)<!-- -->
+![](PA1_template_files/figure/q4plot-1.png)<!-- -->

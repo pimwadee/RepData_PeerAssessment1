@@ -72,7 +72,7 @@ To answer this question, I am going to use the rowsum function to produce a roug
 hist(rowsum(act$steps,act$date,na.rm=TRUE),10,main="The total number of steps taken per day",xlab="The total number of steps",ylab="The number of days")
 ```
 
-![](PA1_template_files/figure-html/q1plot-1.png)<!-- -->
+![](PA1_template_files/figure/q1plot-1.png)<!-- -->
 
 And here are the mean and median of the total number of steps taken per day.
 
